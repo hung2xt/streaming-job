@@ -157,9 +157,11 @@ pip install google-cloud
 ```
 
 Everything now is ready. I use `publisher.py` to generate some faked message and use Google Pub/Sub to publish an subscribe the messages.
+
 Audiences can see the file in the repository.
 
 publish: A function to publish a message to a specified Pub/Sub topic.
+
 generate_tweep: This function generates a simulated message (tweep) with a timestamp, a unique ID, a random sentence, and a randomly selected user.
 
 ```python
@@ -179,6 +181,7 @@ def generate_tweep():
 ```
 
 After the messages are published. You can verify it here: https://console.cloud.google.com/cloudpubsub/topic/.
+
 Otherwise, we might use `subscription.py` to view the messages.
 
 ### Step 3 - Using Apache Beam to read the messages
@@ -245,6 +248,7 @@ you can shut down the entire Google Cloud project. This action will delete all r
 ```
 
 To revoke access and delete resources created in a Google Cloud project using the `gcloud` command-line tool, you can use the following commands.
+
 Be cautious with these commands as they will permanently delete your resources. Always double-check before executing, especially for project deletion.
 
 ```bash
