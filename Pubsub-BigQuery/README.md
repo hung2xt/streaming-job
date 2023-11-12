@@ -150,7 +150,7 @@ bq mk -t --schema 'created_at:TIMESTAMP,tweep_id:STRING,text:STRING,user:STRING,
 ### Step 2 - Create a demo streaming job
 In order to run this experiment, I shall use a fake stream:
 
-* Install extral libaries
+* Install extra libaries
 ```bash
 pip install --upgrade faker
 pip install google-cloud
@@ -185,6 +185,7 @@ Otherwise, we might use `subscription.py` to view the messages.
 
 We shall use the `pipeline.py` to perform the streaming pipeline.
 
+```bash
 This is a pipeline using Apache Beam to create a data processing pipeline for streaming data. 
 There are some step in the pipeline. Below is pipeline definition:
     - The pipeline is instantiated with streaming mode enabled.
@@ -195,4 +196,27 @@ There are some step in the pipeline. Below is pipeline definition:
     - The check_tweep function adds a flagged boolean field to each message, marking it as true if it contains any predefined "bad words".
     - The processed data is then written to a `BigQuery` table with a specified schema/table.
 
+```
+* How to submit this pipeline?
 
+```bash
+ python3 pipeline.py --streaming --runner DataflowRunner \
+  --project $PROJECT_ID \
+  --temp_location gs://dataflow/temp \
+  --staging_location gs://dataflow/staging \
+  --region us-central1 \
+  --table_name SCD.streaming-job-demo \
+  --subnetwork https://www.googleapis.com/compute/v1/projects/$PROJECT_ID/regions/$REGION/subnetworks/$SUBNET
+  --job_name streaming-job-demo
+```
+
+### Step 4 - Checking the result
+
+```bash
+Open the Google Cloud Console: On the left panel > ANALYTICS category.
+
+Navigate to the Dataflow Section: On the left-hand menu, click on "Dataflow" under the "Big Data" category. 
+If you don't see it, use the search bar at the top to search for "Dataflow".
+View Your Dataflow Jobs: In the Dataflow section, you'll see a list of your Dataflow jobs. You can check the status of each job (e.g., running, stopped, failed) in this list.
+Inspect a Specific Job: Click on a job name to see more details about its execution, including job logs, metrics, and the execution graph.
+```
