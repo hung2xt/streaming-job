@@ -11,9 +11,9 @@ import numpy as np
 
 rng = np.random.default_rng()
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/kayshowz069/dataflow/sawyer-work-1804.json"
-PROJECT_ID = 'sawyer-work-1804'
-TOPIC = 'created_users'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "streaming_service_account.json" #This a service account key file that is downloaded in the previous step
+PROJECT_ID = 'sa-128-ak'
+TOPIC = 'created-users'
 
 usernames = []
 faker = Faker()
