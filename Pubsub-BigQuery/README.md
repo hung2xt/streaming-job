@@ -244,44 +244,35 @@ This can be done through the Cloud Console or via the `gcloud` CLI.
 you can shut down the entire Google Cloud project. This action will delete all resources within the project.
 ```
 
+To revoke access and delete resources created in a Google Cloud project using the `gcloud` command-line tool, you can use the following commands.
+Be cautious with these commands as they will permanently delete your resources. Always double-check before executing, especially for project deletion.
+
 ```bash
-To revoke access and delete resources created in a Google Cloud project using the `gcloud` command-line tool, you can use the following commands:
 
-1. Revoke IAM Roles:
-
+#1. Revoke IAM Roles:
 gcloud projects remove-iam-policy-binding $PROJECT_ID --member=$SA_NAME --role='[ROLE]' # Add roles that we assigned previous step here
 
 #Replace `[PROJECT_ID]`, `[MEMBER]`, and `[ROLE]` with the relevant project ID, member (user/service account), and role.
 
-2. Delete Pub/Sub Topics and Subscriptions:
-
+#2. Delete Pub/Sub Topics and Subscriptions:
 gcloud pubsub topics delete $TOPIC_NAME
 gcloud pubsub subscriptions delete $SUBSCRIPTION_NAME
 
-3. Delete BigQuery Dataset and Tables:
-
+#3. Delete BigQuery Dataset and Tables:
 bq rm -r -f $PROJECT_ID:SCD
- 
 
-4. Stop Dataflow Jobs:
-
+#4. Stop Dataflow Jobs:
 gcloud dataflow jobs list --region=$REGION  #List all job in dataflow
 gcloud dataflow jobs cancel [JOB_ID]        #Replace it with your JOB_ID
 
-
-5. Delete Cloud Storage Buckets:
-
+#5. Delete Cloud Storage Buckets:
 gsutil rm -r gs://$BUCKET_NAME
 
-6. Delete VPCs and Subnets:
-
+#6. Delete VPCs and Subnets:
 gcloud compute networks subnets delete $SUBNET --region=$REGION
 gcloud compute networks delete $VPC_NETWORK
 
-
-7. Delete the Project (optional):
-
+#7. Delete the Project (optional):
 gcloud projects delete $PROJECT_ID
 
-Be cautious with these commands as they will permanently delete your resources. Always double-check before executing, especially for project deletion.
 ```
