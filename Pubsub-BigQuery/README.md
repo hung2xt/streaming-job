@@ -21,12 +21,13 @@ pip install --upgrade apache-beam[gcp]
 2. Enable API for Dataflow, BigQuery, Pubsub, VPC Network
 
 Visit https://console.cloud.google.com/apis.
-Go to the "API & Services" > "Library" \n
-Search for the Service API: \n
-    For Dataflow: Search for "Dataflow API" and click on it. \n
-    For BigQuery: Search for "BigQuery API" and click on it. \n
-    For VPC Network: Search for "Compute Engine API" (as VPC network services are part of Compute Engine) and click on it. \n
-    For PubSub: Search for "PubSub API" and click on it. \n
+Go to the "API & Services" > "Library".
+Search for the Service API:
+
+    For Dataflow: Search for "Dataflow API" and click on it.
+    For BigQuery: Search for "BigQuery API" and click on it.
+    For VPC Network: Search for "Compute Engine API" (as VPC network services are part of Compute Engine) and click on it.
+    For PubSub: Search for "PubSub API" and click on it.
 
 Or using gcloud command
 
