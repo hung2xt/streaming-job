@@ -213,10 +213,75 @@ There are some step in the pipeline. Below is pipeline definition:
 ### Step 4 - Checking the result
 
 ```bash
-Open the Google Cloud Console: On the left panel > ANALYTICS category.
-
-Navigate to the Dataflow Section: On the left-hand menu, click on "Dataflow" under the "Big Data" category. 
+Navigate to the Dataflow Section: On the left-hand menu, click on "Dataflow" in the ANALYTICS category. 
 If you don't see it, use the search bar at the top to search for "Dataflow".
 View Your Dataflow Jobs: In the Dataflow section, you'll see a list of your Dataflow jobs. You can check the status of each job (e.g., running, stopped, failed) in this list.
 Inspect a Specific Job: Click on a job name to see more details about its execution, including job logs, metrics, and the execution graph.
+```
+* Check the data is written on BigQuery
+
+```bash
+bq query --use_legacy_sql=false 'SELECT * FROM `SCD.streaming-job-demo` LIMIT 100'
+
+```
+
+
+* Revoke all resource for this project
+
+```bash
+1. Revoke IAM Roles: Remove any IAM roles assigned to users or service accounts that you no longer need. 
+This can be done through the Cloud Console or via the `gcloud` CLI.
+
+2. Delete Resources:
+   - Pub/Sub: Delete any Pub/Sub topics and subscriptions.
+   - BigQuery: Remove any datasets and tables in BigQuery.
+   - Dataflow: Stop any running Dataflow jobs.
+   - Cloud Storage: Delete any buckets and their contents.
+   - VPCs and Subnets: Remove any created VPCs and subnets.
+   These can be done either through the Cloud Console or via the `gcloud` CLI commands.
+
+3. Delete the Project (optional): If you want to remove everything and are sure you won't need the project in the future, 
+you can shut down the entire Google Cloud project. This action will delete all resources within the project.
+```
+
+```bash
+To revoke access and delete resources created in a Google Cloud project using the `gcloud` command-line tool, you can use the following commands:
+
+1. Revoke IAM Roles:
+
+gcloud projects remove-iam-policy-binding $PROJECT_ID --member=$SA_NAME --role='[ROLE]' # Add roles that we assigned previous step here
+
+#Replace `[PROJECT_ID]`, `[MEMBER]`, and `[ROLE]` with the relevant project ID, member (user/service account), and role.
+
+2. Delete Pub/Sub Topics and Subscriptions:
+
+gcloud pubsub topics delete $TOPIC_NAME
+gcloud pubsub subscriptions delete $SUBSCRIPTION_NAME
+
+3. Delete BigQuery Dataset and Tables:
+
+bq rm -r -f $PROJECT_ID:SCD
+ 
+
+4. Stop Dataflow Jobs:
+
+gcloud dataflow jobs list --region=$REGION  #List all job in dataflow
+gcloud dataflow jobs cancel [JOB_ID]        #Replace it with your JOB_ID
+
+
+5. Delete Cloud Storage Buckets:
+
+gsutil rm -r gs://$BUCKET_NAME
+
+6. Delete VPCs and Subnets:
+
+gcloud compute networks subnets delete $SUBNET --region=$REGION
+gcloud compute networks delete $VPC_NETWORK
+
+
+7. Delete the Project (optional):
+
+gcloud projects delete $PROJECT_ID
+
+Be cautious with these commands as they will permanently delete your resources. Always double-check before executing, especially for project deletion.
 ```
