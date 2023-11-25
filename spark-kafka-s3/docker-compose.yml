@@ -150,7 +150,7 @@ services:
 
   # Apache Spark Master Node
   spark_master:
-    image: bitnami/spark:3
+    image: bitnami/spark:3.3.0-debian-11-r16
     container_name: spark_master
     ports:
       - 8085:8080

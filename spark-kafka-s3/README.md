@@ -274,3 +274,27 @@ This endeavor was more than just constructing a pipeline; it was about understan
 
 
 
+spark-submit \
+--master "local[2]" \
+--jars /opt/bitnami/spark/jars/kafka-clients-2.8.1.jar,\
+/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar,\
+/opt/bitnami/spark/jars/hadoop-aws-3.3.2.jar,\
+/opt/bitnami/spark/jars/aws-java-sdk-s3-1.11.375.jar,\
+/opt/bitnami/spark/jars/commons-pool2-2.8.0.jar,/opt/bitnami/spark/jars/scala-library-2.12.15.jar  \
+spark_from_kafka_to_s3.py 
+
+spark-submit \
+--master "local[2]" \
+--packages "org.apache.spark-streaming-kafka-0-10_2.13:3.3.0" \
+--jars /opt/bitnami/spark/jars/kafka-clients-2.8.1.jar,\
+/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar,\
+/opt/bitnami/spark/jars/hadoop-aws-3.3.2.jar,\
+/opt/bitnami/spark/jars/aws-java-sdk-bundle-1.12.595.jar \
+spark_from_kafka_to_s3.py 
+
+docker cp spark_from_kafka_to_s3.py  spark_master:/opt/bitnami/spark/
+
+spark-submit \
+--master "local[2]" \
+--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,com.amazonaws:aws-java-sdk-s3:1.12.31,org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375 \
+spark_from_kafka_to_s3.py 

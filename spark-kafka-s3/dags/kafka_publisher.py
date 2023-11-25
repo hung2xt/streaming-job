@@ -59,7 +59,7 @@ def delivery_status(err, msg):
 def initiate_stream():
     """Initiates the process to stream user data to Kafka."""
     kafka_producer = configure_kafka()
-    for _ in range(STREAMING_DURATION // PAUSE_INTERVAL):
+    for _ in range(100):
         raw_data = retrieve_user_data()
         kafka_formatted_data = transform_user_data(raw_data)
         publish_to_kafka(kafka_producer, KAFKA_TOPIC, kafka_formatted_data)

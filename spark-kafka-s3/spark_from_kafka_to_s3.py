@@ -109,12 +109,12 @@ def initiate_streaming_to_bucket(df, path, checkpoint_location):
 
 def main():
     app_name = "SparkStructuredStreamingToS3"
-    access_key = "AKIAWPFJF3FYVN23RY3Y"
-    secret_key = "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"
+    access_key = ""
+    secret_key = ""
     brokers = "kafka_broker_1:19092,kafka_broker_2:19093,kafka_broker_3:19094"
     topic = "names_topic"
-    path = "BUCKET_PATH"
-    checkpoint_location = "CHECKPOINT_LOCATION"
+    path = "s3a://spark-kafka/spark-kafka-sink/"
+    checkpoint_location = "s3a://spark-kafka/spark-kafka-sink/checkpoint/"
 
     spark = initialize_spark_session(app_name, access_key, secret_key)
     if spark:
