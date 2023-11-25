@@ -109,8 +109,8 @@ def initiate_streaming_to_bucket(df, path, checkpoint_location):
 
 def main():
     app_name = "SparkStructuredStreamingToS3"
-    access_key = "ENTER_YOUR_ACCESS_KEY"
-    secret_key = "ENTER_YOUR_SECRET_KEY"
+    access_key = "AKIAWPFJF3FYVN23RY3Y"
+    secret_key = "lkAmza3yen7JyLfxCW2dn0rThILNd6N4dj6/tErU"
     brokers = "kafka_broker_1:19092,kafka_broker_2:19093,kafka_broker_3:19094"
     topic = "names_topic"
     path = "BUCKET_PATH"

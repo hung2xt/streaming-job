@@ -176,4 +176,4 @@ networks:
     driver: bridge
   default:
     external:
-      name: docker_streaming
+      name: spark-kafka-network

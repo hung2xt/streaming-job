@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
-from kafka_streaming_service import initiate_stream  
+from kafka-publisher import initiate_stream  
 # Configuration for the DAG's start date
 DAG_START_DATE = datetime(2018, 12, 21, 12, 12)
 
