@@ -1,49 +1,3 @@
-# Kafka, Spark to S3 Data Pipeline
-## **Introduction: Crafting a Data Engineering Ecosystem**
-
-In today's data-centric world, data engineering is pivotal. With data volumes growing, real-time processing and analytics are essential. This guide dives into building a strong data pipeline, integrating Kafka, Spark, Airflow, Docker, S3, and Python.
-
-We use the Random Name API to mimic real-time data flow. A Python script fetches data from this API, sending it to a Kafka topic. Airflow DAGs ensure regular data streaming. Spark processes this data and transfers it to S3.
-
-Each component, including Kafka, Spark, and Airflow, operates in isolated Docker environments, enhancing functionality and scalability.
-
-## **Getting Started: Initial Steps**
-
-This project, hosted on GitHub, is straightforward to set up.
-
-**a. Docker:**
-Docker orchestrates our services. Install it from the official website and verify with `docker --version`.
-
-**b. S3:**
-S3 is used for storage. Set up a new bucket via the AWS Console.
-
-**c. Project Setup:**
-
-- **Clone the Repository:** `git clone https://github.com/hung2xt/streaming-job.git` and navigate to `cd ./spark-kafka-s3`.
-- **Deploy with Docker Compose:** Use `docker-compose -f docker-compose.yml up -d` to start services in Docker.
-
-## **Project File Overview**
-
-- **`docker-compose.yml`**: Central to our setup, it defines the services and their configuration.
-- **`kafka_streaming_airflow_dag.py`**: An Airflow DAG script for data streaming to Kafka.
-- **`spark_from_kafka_to_s3.py`**: Processes and stores data in S3.
-
-## **Execution and Troubleshooting**
-
-1. Initialize Kafka and create a topic.
-2. Set up and validate Airflow.
-3. Stream data to Kafka and check.
-4. Transfer and execute the Spark script.
-5. Confirm data transfer to S3.
-
-Address challenges in configuration, networking, and dependencies to ensure smooth operation.
-
-## **Conclusion**
-
-This project is a journey through advanced data engineering, leveraging Kafka, Spark, and Airflow. It's an exploration of tool integration, inviting further customization and innovation.
-
-
-
 # From Kafka, Spark to S3
 ## **Introduction: Building a Dynamic Data Engineering Project**
 
@@ -207,7 +161,7 @@ If the script is the main module being run, it will execute the **`main`** funct
 
 ## **Building the Data Pipeline: Step-by-Step**
 
-### **1. Set Up Kafka Cluster**
+#### 1. Set Up Kafka Cluster
 
 Start your Kafka cluster with the following commands:
 
@@ -216,7 +170,7 @@ docker network create spark-kafka-network
 docker-compose -f docker-compose.yml up -d
 ```
 
-### 2**. Create the topic for Kafka (**http://localhost:8888/)
+#### 2. Create the topic for Kafka (**http://localhost:8888/)
 
 - Access the Kafka UI at http://localhost:8888/.
 - Observe the active cluster.
@@ -224,7 +178,7 @@ docker-compose -f docker-compose.yml up -d
 - Create a new topic named "created_users".
 - Set the replication factor to 3.
 
-### 3**. Configure Airflow User**
+#### 3. Configure Airflow User
 
 Create an Airflow user with admin privileges:
 
@@ -232,7 +186,7 @@ Create an Airflow user with admin privileges:
 docker-compose run airflow_webserver airflow users create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin
 ```
 
-### 4**. Access Airflow Bash & Install Dependencies**
+#### 4. Access Airflow Bash & Install Dependencies
 
 Use the provided script to access the Airflow bash and install required packages:
 
@@ -241,7 +195,7 @@ Use the provided script to access the Airflow bash and install required packages
 pip install -r ./requirements.txt
 ```
 
-### 5**. Validate DAGs**
+#### 5. Validate DAGs
 
 Ensure there are no errors with your DAGs:
 
@@ -249,7 +203,7 @@ Ensure there are no errors with your DAGs:
 airflow dags list
 ```
 
-### 6**. Start Airflow Scheduler**
+#### 6. Start Airflow Scheduler
 
 To initiate the DAG, run the scheduler:
 
@@ -257,11 +211,11 @@ To initiate the DAG, run the scheduler:
 airflow scheduler
 ```
 
-### 6**. Verify the data is uploaded to Kafka Cluster**
+#### 6. Verify the data is uploaded to Kafka Cluster
 
 - Access the Kafka UI at http://localhost:8888/ and verify that the data is uploaded for the topic
 
-### 7**. Transfer Spark Script**
+#### 7. Transfer Spark Script
 
 Copy your Spark script into the Docker container:
 
@@ -269,7 +223,7 @@ Copy your Spark script into the Docker container:
 docker cp spark_from_kafka_to_s3.py spark_master:/opt/bitnami/spark/
 ```
 
-### 8**. Initiate Spark Master & Download JARs**
+#### 8. Initiate Spark Master & Submit
 
 Access Spark bash and submit the Spark job:
 
@@ -288,7 +242,7 @@ Alternative option - we might use docker `spark-submit.sh`
 chmod +x spark-submit.sh
 ./spark-submit.sh
 ```
-### 9**. Verify Data on S3**
+#### 9. Verify Data on S3
 
 After executing the steps, check your S3 bucket to ensure data has been uploaded
 
@@ -296,7 +250,7 @@ After executing the steps, check your S3 bucket to ensure data has been uploaded
 
 1. **Configuration Challenges**: Ensuring environment variables and configurations (like in the **`docker-compose.yaml`** file) are correctly set can be tricky. An incorrect setting might prevent services from starting or communicating.
 2. **Service Dependencies**: Services like Kafka or Airflow have dependencies on other services (e.g., Zookeeper for Kafka). Ensuring the correct order of service initialization is crucial.
-3. **Airflow DAG Errors**: Syntax or logical errors in the DAG file (**`kafka_stream_dag.py`**) can prevent Airflow from recognizing or executing the DAG correctly.
+3. **Airflow DAG Errors**: Syntax or logical errors in the DAG file (`kafka_streaming_airflow_dag.py`) can prevent Airflow from recognizing or executing the DAG correctly.
 4. **Data Transformation Issues**: The data transformation logic in the Python script might not always produce expected results, especially when handling various data inputs from the Random Name API.
 5. **Spark Dependencies**: Ensuring all required JARs are available and compatible is essential for Spark's streaming job. Missing or incompatible JARs can lead to job failures.
 6. **Kafka Topic Management**: Creating topics with the correct configuration (like replication factor) is essential for data durability and fault tolerance.
@@ -306,8 +260,6 @@ After executing the steps, check your S3 bucket to ensure data has been uploaded
 
 ## **Conclusion:**
 
-Throughout this journey, we delved deep into the intricacies of real-world data engineering, progressing from raw, unprocessed data to actionable insights. Beginning with collecting random user data, we harnessed the capabilities of Kafka, Spark, and Airflow to manage, process, and automate the streaming of this data. Docker streamlined the deployment, ensuring a consistent environment, while other tools like S3 and Python played pivotal roles.
-
-This endeavor was more than just constructing a pipeline; it was about understanding the synergy between tools. I encourage all readers to experiment further, adapting and enhancing this pipeline to cater to unique requirements and uncover even more profound insights. Dive in, explore, and innovate!
+This project is a journey through advanced data engineering, leveraging Kafka, Spark, and Airflow. It's an exploration of tool integration, inviting further customization and innovation.
 
 
