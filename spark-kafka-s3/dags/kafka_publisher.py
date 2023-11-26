@@ -8,7 +8,7 @@ from confluent_kafka import Producer
 # Constants and configuration
 API_ENDPOINT = "https://randomuser.me/api/?results=1"
 KAFKA_BOOTSTRAP_SERVERS = ['kafka_broker_1:19092','kafka_broker_2:19093','kafka_broker_3:19094']
-KAFKA_TOPIC = "names_topic"  
+KAFKA_TOPIC = "created_users"  
 PAUSE_INTERVAL = 10  
 STREAMING_DURATION = 120
 
