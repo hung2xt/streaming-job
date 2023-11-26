@@ -1,4 +1,4 @@
-# Data-Engineering-Streaming-Project
+# From Kafka, Spark to S3
 ## **Introduction: Building a Dynamic Data Engineering Project**
 
 In our rapidly evolving digital age, data engineering has emerged as the backbone of the modern data-driven world. We're surrounded by an ever-increasing volume of data, and the ability to process and analyze this data in real-time is becoming a necessity rather than a luxury. In this guide, we'll delve deep into constructing a robust data pipeline, leveraging a combination of Kafka for data streaming, Spark for processing, Airflow for orchestration, Docker for containerization, S3 for storage, and Python as our primary scripting language.
@@ -29,13 +29,13 @@ AWS S3 is our go-to for data storage.
 - **Clone the Repository:** First, you'll need to clone the project from its GitHub repository using the following command:
 
 ```
-git clone <https://github.com/simardeep1792/Data-Engineering-Streaming-Project.git>
+git clone https://github.com/hung2xt/streaming-job.git
 ```
 
 Navigate to the project directory:
 
 ```
-cd Data-Engineering-Streaming-Project
+cd ./spark-kafka-s3
 ```
 
 - **Deploy Services using `docker-compose`:** Within the project directory, you'll find a `docker-compose.yml` file. This file describes all the services and their
@@ -83,15 +83,15 @@ We utilize a persistent volume, **`spark_data`**, ensuring data consistency for 
 Two networks anchor our services:
 
 - **Kafka Network (`kafka_network`):** Dedicated to Kafka.
-- **Default Network (`default`):** Externally named as **`docker_streaming`**.
+- **Default Network (`default`):** Externally named as **`spark-kafka-network`**.
 
-### 2)  **`kafka_stream_dag.py`**
+### 2)  **`kafka_streaming_airflow_dag.py`**
 
 This file primarily defines an Airflow Directed Acyclic Graph (DAG) that handles the streaming of data to a Kafka topic.
 
 **1. Imports**
 
-Essential modules and functions are imported, notably the Airflow DAG and PythonOperator, as well as a custom **`initiate_stream`** function from **`kafka_streaming_service`**.
+Essential modules and functions are imported, notably the Airflow DAG and PythonOperator, as well as a custom **`initiate_stream`** function from **`kafka_publisher.py`**.
 
 **2. Configuration**
 
@@ -100,13 +100,13 @@ Essential modules and functions are imported, notably the Airflow DAG and Python
 
 **3. DAG Definition**
 
-A new DAG is created with the name **`name_stream_dag`**, configured to run daily at 1 AM. It's designed not to run for any missed intervals (with **`catchup=False`**) and allows only one active run at a time.
+A new DAG is created with the name **`name_stream_dag`**, configured to run daily at every 5 minutes.
 
 **4. Tasks**
 
-A single task, **`kafka_stream_task`**, is defined using the PythonOperator. This task calls the **`initiate_stream`** function, effectively streaming data to Kafka when the DAG runs.
+A single task, **`kafka_publisher`**, is defined using the PythonOperator. This task calls the **`initiate_stream`** function, effectively streaming data to Kafka when the DAG runs.
 
-### 3)  **`kafka_streaming_service.py`**
+### 3)  **`kafka_streaming_airflow_dag.py`**
 
 **1. Imports & Configuration**
 
@@ -134,7 +134,7 @@ The **`transform_user_data`** function formats the raw user data for Kafka strea
 
 When the script is run directly, the **`initiate_stream`** function is executed, streaming data for the duration specified by **`STREAMING_DURATION`**.
 
-### 3)  **`spark_processing.py`**
+### 3)  **`spark_from_kafka_to_s3.py`**
 
 **1. Imports & Logging Initialization**
 
@@ -168,7 +168,7 @@ If the script is the main module being run, it will execute the **`main`** funct
 Start your Kafka cluster with the following commands:
 
 ```bash
-docker network create docker_streaming
+docker network create spark-kafka-network
 docker-compose -f docker-compose.yml up -d
 ```
 
@@ -177,7 +177,7 @@ docker-compose -f docker-compose.yml up -d
 - Access the Kafka UI at http://localhost:8888/.
 - Observe the active cluster.
 - Navigate to 'Topics'.
-- Create a new topic named "names_topic".
+- Create a new topic named "created_users".
 - Set the replication factor to 3.
 
 ### 3**. Configure Airflow User**
@@ -217,40 +217,34 @@ airflow scheduler
 
 - Access the Kafka UI at http://localhost:8888/ and verify that the data is uploaded for the topic
 
-### 8**. Transfer Spark Script**
+### 7**. Transfer Spark Script**
 
 Copy your Spark script into the Docker container:
 
 ```bash
-docker cp spark_processing.py spark_master:/opt/bitnami/spark/
+docker cp spark_from_kafka_to_s3.py spark_master:/opt/bitnami/spark/
 ```
 
-### 9**. Initiate Spark Master & Download JARs**
+### 8**. Initiate Spark Master & Download JARs**
 
-Access Spark bash, navigate to the `jars` directory, and download essential JAR files. After downloading, submit the Spark job:
+Access Spark bash and submit the Spark job:
 
 ```bash
 docker exec -it spark_master /bin/bash
-cd jars
 
-curl -O https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.8.1/kafka-clients-2.8.1.jar
-curl -O https://repo1.maven.org/maven2/org/apache/spark/spark-sql-kafka-0-10_2.13/3.3.0/spark-sql-kafka-0-10_2.13-3.3.0.jar
-curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.0/hadoop-aws-3.2.0.jar
-curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.375/aws-java-sdk-s3-1.11.375.jar
-curl -O https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.8.0/commons-pool2-2.8.0.jar
-
-cd ..
 spark-submit \
---master local[2] \
---jars /opt/bitnami/spark/jars/kafka-clients-2.8.1.jar,\
-/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar,\
-/opt/bitnami/spark/jars/hadoop-aws-3.2.0.jar,\
-/opt/bitnami/spark/jars/aws-java-sdk-s3-1.11.375.jar,\
-/opt/bitnami/spark/jars/commons-pool2-2.8.0.jar \
-spark_processing.py
-```
+--master "local[2]" \
+--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,com.amazonaws:aws-java-sdk-s3:1.12.31,org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375 \
+spark_from_kafka_to_s3.py 
 
-### 10**. Verify Data on S3**
+```
+Alternative option - we might use docker `spark-submit.sh`
+
+```bash
+chmod +x spark-submit.sh
+./spark-submit.sh
+```
+### 9**. Verify Data on S3**
 
 After executing the steps, check your S3 bucket to ensure data has been uploaded
 
@@ -273,28 +267,3 @@ Throughout this journey, we delved deep into the intricacies of real-world data 
 This endeavor was more than just constructing a pipeline; it was about understanding the synergy between tools. I encourage all readers to experiment further, adapting and enhancing this pipeline to cater to unique requirements and uncover even more profound insights. Dive in, explore, and innovate!
 
 
-
-spark-submit \
---master "local[2]" \
---jars /opt/bitnami/spark/jars/kafka-clients-2.8.1.jar,\
-/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar,\
-/opt/bitnami/spark/jars/hadoop-aws-3.3.2.jar,\
-/opt/bitnami/spark/jars/aws-java-sdk-s3-1.11.375.jar,\
-/opt/bitnami/spark/jars/commons-pool2-2.8.0.jar,/opt/bitnami/spark/jars/scala-library-2.12.15.jar  \
-spark_from_kafka_to_s3.py 
-
-spark-submit \
---master "local[2]" \
---packages "org.apache.spark-streaming-kafka-0-10_2.13:3.3.0" \
---jars /opt/bitnami/spark/jars/kafka-clients-2.8.1.jar,\
-/opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.13-3.3.0.jar,\
-/opt/bitnami/spark/jars/hadoop-aws-3.3.2.jar,\
-/opt/bitnami/spark/jars/aws-java-sdk-bundle-1.12.595.jar \
-spark_from_kafka_to_s3.py 
-
-docker cp spark_from_kafka_to_s3.py  spark_master:/opt/bitnami/spark/
-
-spark-submit \
---master "local[2]" \
---packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0,com.amazonaws:aws-java-sdk-s3:1.12.31,org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375 \
-spark_from_kafka_to_s3.py 
