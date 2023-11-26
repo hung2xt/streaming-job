@@ -113,8 +113,8 @@ def main():
     secret_key = ""
     brokers = "kafka_broker_1:19092,kafka_broker_2:19093,kafka_broker_3:19094"
     topic = "created_users"
-    path = "s3a://spark-kafka/spark-kafka-sink/"
-    checkpoint_location = "s3a://spark-kafka/spark-kafka-sink/checkpoint/"
+    path = "s3a://spark-kafka-s3/spark-kafka-sink/"
+    checkpoint_location = "s3a://spark-kafka-s3/spark-kafka-sink/checkpoint/"
 
     spark = initialize_spark_session(app_name, access_key, secret_key)
     if spark:
