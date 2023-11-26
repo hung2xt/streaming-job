@@ -211,11 +211,11 @@ To initiate the DAG, run the scheduler:
 airflow scheduler
 ```
 
-#### 6. Verify the data is uploaded to Kafka Cluster
+#### 7. Verify the data is uploaded to Kafka Cluster
 
 - Access the Kafka UI at http://localhost:8888/ and verify that the data is uploaded for the topic
 
-#### 7. Transfer Spark Script
+#### 8. Transfer Spark Script
 
 Copy your Spark script into the Docker container:
 
@@ -223,7 +223,7 @@ Copy your Spark script into the Docker container:
 docker cp spark_from_kafka_to_s3.py spark_master:/opt/bitnami/spark/
 ```
 
-#### 8. Initiate Spark Master & Submit
+#### 9. Initiate Spark Master & Submit
 
 Access Spark bash and submit the Spark job:
 
@@ -242,7 +242,7 @@ Alternative option - we might use docker `spark-submit.sh`
 chmod +x spark-submit.sh
 ./spark-submit.sh
 ```
-#### 9. Verify Data on S3
+#### 10. Verify Data on S3
 
 After executing the steps, check your S3 bucket to ensure data has been uploaded
 
