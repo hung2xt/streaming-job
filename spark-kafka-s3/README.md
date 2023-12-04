@@ -39,7 +39,7 @@ cd ./spark-kafka-s3
 - **Deploy Services using `docker-compose`:** Within the project directory, you'll find a `docker-compose.yml` file. This file describes all the services and their
 
 ```
-docker network create docker_streaming
+docker network create spark-kafka-network
 docker-compose -f docker-compose.yml up -d
 ```
 
