@@ -74,7 +74,7 @@ Ensure you have the necessary JAR files for Kafka and Hive dependencies in your 
 
         val spark = SparkSession.builder
                         .appName("SinkKafkaToHive")
-                        .config("spark.sql.warehouse.dir", "hdfs://localhost:9000/user/hive/warehouse/hive_data_sandbox.db")
+                        .config("spark.sql.warehouse.dir", "hdfs:cody_sand_us_central1:9000/hive/warehouse/hive_data_sandbox.db")
                         .master("local[*]")
                         .enableHiveSupport()
                         .getOrCreate()
@@ -109,7 +109,7 @@ Ensure you have the necessary JAR files for Kafka and Hive dependencies in your 
                         .outputMode("append")
                         .format("parquet")
                         .option("path", "hdfs://localhost:9000/user/hive/warehouse/hive_data_sandbox.db/website_visit")
-                        .option("checkpointLocation", "hdfs://localhost:9000/user/hive/warehouse/hive_data_sandbox.db/website_visit_checkpoint")
+                        .option("checkpointLocation", "hdfs:cody_sand_us_central1:9000/hive/warehouse/hive_data_sandbox.db/website_visit_checkpoint")
                         .start()
 
         query.awaitTermination()
