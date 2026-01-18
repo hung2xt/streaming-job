@@ -1,0 +1,53 @@
+# Apache Flink Configuration for Kafka-Flink-Iceberg Pipeline
+# This configuration is optimized for Flink 1.19.1 with Iceberg integration
+
+# JobManager RPC address (required for standalone cluster)
+jobmanager.rpc.address: localhost
+
+# Classloader Configuration
+# CRITICAL: Use parent-first for Hadoop, AWS, and Iceberg classes
+# This prevents classloader conflicts between Flink and Iceberg dependencies
+classloader.resolve-order: parent-first
+classloader.parent-first-patterns.additional: org.apache.hadoop.;com.amazonaws.;org.apache.iceberg.
+
+# Memory Configuration
+# JobManager: Manages job execution and coordination
+jobmanager.memory.process.size: 1600m
+
+# TaskManager: Executes tasks and processes data
+taskmanager.memory.process.size: 1728m
+
+# Number of task slots per TaskManager
+# Each slot can execute one parallel task
+# Set to number of CPU cores for optimal performance
+taskmanager.numberOfTaskSlots: 2
+
+# Rest API Configuration (Web UI)
+rest.port: 8081
+rest.address: localhost
+
+# High Availability (optional - uncomment for production)
+# high-availability: zookeeper
+# high-availability.storageDir: hdfs:///flink/ha/
+# high-availability.zookeeper.quorum: localhost:2181
+
+# Checkpointing Configuration
+# NOTE: Checkpoints are configured in job code (30s interval)
+# Checkpoint storage for recovery
+# state.backend: rocksdb
+# state.checkpoints.dir: file:///tmp/flink-checkpoints
+
+# Savepoint Configuration (for manual backups)
+# state.savepoints.dir: file:///tmp/flink-savepoints
+
+# Metrics Configuration (optional)
+# metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+# metrics.reporter.prom.port: 9249
+
+# Logging
+# log.level: INFO
+
+# Advanced Tuning (uncomment if needed)
+# taskmanager.network.memory.fraction: 0.1
+# taskmanager.network.memory.min: 64mb
+# taskmanager.network.memory.max: 1gb
