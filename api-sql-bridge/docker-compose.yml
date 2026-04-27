@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  source-api:
+    build: .
+    command: uvicorn mock_source_api.main:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  gateway:
+    build: .
+    command: uvicorn gateway.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - warehouse-data:/app/warehouse
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SOURCE_API_URL=http://source-api:8001
+    depends_on:
+      - source-api
+
+volumes:
+  warehouse-data:

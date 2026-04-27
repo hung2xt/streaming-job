@@ -1,4 +1,0 @@
-pip install --upgrade apache-beam[gcp]
-pip install --upgrade faker
-pip install google-cloud
-
