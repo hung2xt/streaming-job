@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Hadoop Core Configuration Template for S3A (MinIO/AWS S3)
+
+  INSTRUCTIONS:
+  1. Copy this file to core-site.xml
+  2. Replace YOUR_ACCESS_KEY_HERE and YOUR_SECRET_KEY_HERE with your actual credentials
+  3. Update endpoint if needed
+
+  For MinIO default:
+    - access.key: minioadmin
+    - secret.key: minioadmin
+    - endpoint: http://localhost:9000
+
+  For AWS S3:
+    - Use your IAM access key and secret key
+    - endpoint: s3.amazonaws.com or s3.region.amazonaws.com
+    - Set path.style.access to false
+    - Set connection.ssl.enabled to true
+-->
+<configuration>
+    <!-- S3A Endpoint (MinIO or AWS S3) -->
+    <property>
+        <name>fs.s3a.endpoint</name>
+        <value>http://localhost:9000</value>
+        <description>
+            MinIO endpoint. For AWS S3, use:
+            - US East: s3.amazonaws.com
+            - Other regions: s3.{region}.amazonaws.com
+        </description>
+    </property>
+
+    <!-- S3A Access Credentials -->
+    <!-- IMPORTANT: Replace with your actual credentials -->
+    <property>
+        <name>fs.s3a.access.key</name>
+        <value>YOUR_ACCESS_KEY_HERE</value>
+        <description>
+            S3 access key
+            For MinIO default: minioadmin
+            For AWS: Use IAM access key
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.secret.key</name>
+        <value>YOUR_SECRET_KEY_HERE</value>
+        <description>
+            S3 secret key
+            For MinIO default: minioadmin
+            For AWS: Use IAM secret key
+        </description>
+    </property>
+
+    <!-- S3A Configuration -->
+    <property>
+        <name>fs.s3a.path.style.access</name>
+        <value>true</value>
+        <description>
+            Use path-style access for MinIO (bucket.endpoint/path)
+            Set to false for AWS S3 (virtual-hosted style)
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>false</value>
+        <description>
+            Disable SSL for local MinIO
+            Set to true for AWS S3 in production
+        </description>
+    </property>
+
+    <!-- Performance Tuning -->
+    <property>
+        <name>fs.s3a.block.size</name>
+        <value>128M</value>
+        <description>Block size for S3A filesystem</description>
+    </property>
+
+    <property>
+        <name>fs.s3a.buffer.dir</name>
+        <value>/tmp/s3a-buffer</value>
+        <description>Temporary buffer directory for S3A writes</description>
+    </property>
+
+    <property>
+        <name>fs.s3a.fast.upload</name>
+        <value>true</value>
+        <description>Enable fast upload for better write performance</description>
+    </property>
+</configuration>
